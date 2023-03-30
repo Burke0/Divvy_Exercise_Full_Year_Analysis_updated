@@ -9,6 +9,6 @@
 
  Here are my suggestions for converting casual riders to members
   1) Social media campaign to influence more people to use cyclistic for commutes.
-  2) A rollover minutes system for casual riders to sway them into more frequent trips. Meanwhile, heavily incentivise membership with frequent rider rewards and discounts.
+  2) A rollover minutes system for casual riders to sway them into more frequent trips. Meanwhile, heavily incentivize membership with frequent rider rewards and discounts.
 
   Furthermore, survey data could be beneficial as supplemental data to gain better insights on the differences found, and to test the waters with these proposed programs.
