@@ -1,4 +1,4 @@
-﻿### Divvy_Exercise_Full_Year_Analysis ###
+### Divvy_Exercise_Full_Year_Analysis ###
 
 
 # This analysis is based on the Divvy case study "'Sophisticated, Clear, and Polished’: Divvy and Data Visualization" written by Kevin Hartman (found here: https://artscience.blog/home/divvy-dataviz-case-study). The purpose of this script is to consolidate downloaded Divvy data into a single dataframe and then conduct simple analysis to help answer the key question: “In what ways do members and casual riders use Divvy bikes differently?”
@@ -16,17 +16,17 @@ library(tidyverse)  #helps wrangle data
 library(lubridate)  #helps wrangle date attributes
 library(ggplot2)  #helps visualize data
 getwd() #displays your working directory
-setwd("/Users/kevinhartman/Desktop/Divvy_Exercise/csv") #sets your working directory to simplify calls to data ... make sure to use your OWN username instead of mine ;)
+setwd("~/Workspace") #sets your working directory to simplify calls to data) #sets your working directory to simplify calls to data
 
 
 #=====================
 # STEP 1: COLLECT DATA
 #=====================
 # Upload Divvy datasets (csv files) here
-q2_2019 <- read_csv("Divvy_Trips_2019_Q2.csv")
-q3_2019 <- read_csv("Divvy_Trips_2019_Q3.csv")
-q4_2019 <- read_csv("Divvy_Trips_2019_Q4.csv")
-q1_2020 <- read_csv("Divvy_Trips_2020_Q1.csv")
+q2_2019 <- read.csv("Divvy_Trips_2019_Q2.csv")
+q3_2019 <- read.csv("Divvy_Trips_2019_Q3.csv")
+q4_2019 <- read.csv("Divvy_Trips_2019_Q4.csv")
+q1_2020 <- read.csv("Divvy_Trips_2020_Q1.csv")
 
 
 #====================================================
@@ -68,15 +68,15 @@ colnames(q1_2020)
 
 
 (q2_2019 <- rename(q2_2019
-                   ,ride_id = "01 - Rental Details Rental ID"
-                   ,rideable_type = "01 - Rental Details Bike ID" 
-                   ,started_at = "01 - Rental Details Local Start Time"  
-                   ,ended_at = "01 - Rental Details Local End Time"  
-                   ,start_station_name = "03 - Rental Start Station Name" 
-                   ,start_station_id = "03 - Rental Start Station ID"
-                   ,end_station_name = "02 - Rental End Station Name" 
-                   ,end_station_id = "02 - Rental End Station ID"
-                   ,member_casual = "User Type"))
+                   ,ride_id = X01...Rental.Details.Rental.ID
+                   ,rideable_type =X01...Rental.Details.Bike.ID
+                   ,started_at = X01...Rental.Details.Local.Start.Time  
+                   ,ended_at =  X01...Rental.Details.Local.End.Time  
+                   ,start_station_name = X03...Rental.Start.Station.Name 
+                   ,start_station_id = X03...Rental.Start.Station.ID 
+                   ,end_station_name = X02...Rental.End.Station.Name 
+                   ,end_station_id = X02...Rental.End.Station.ID
+                   ,member_casual = User.Type))
 
 
 # Inspect the dataframes and look for incongruencies
@@ -101,7 +101,7 @@ all_trips <- bind_rows(q2_2019, q3_2019, q4_2019, q1_2020)
 
 # Remove lat, long, birthyear, and gender fields as this data was dropped beginning in 2020
 all_trips <- all_trips %>%  
-  select(-c(start_lat, start_lng, end_lat, end_lng, birthyear, gender, "01 - Rental Details Duration In Seconds Uncapped", "05 - Member Details Member Birthday Year", "Member Gender", "tripduration"))
+  select(-c(start_lat, start_lng, end_lat, end_lng, birthyear, gender, X01...Rental.Details.Duration.In.Seconds.Uncapped, X05...Member.Details.Member.Birthday.Year, Member.Gender, tripduration))
 
 
 #======================================================
@@ -161,9 +161,14 @@ str(all_trips)
 
 
 # Convert "ride_length" from Factor to numeric so we can run calculations on the data
-is.factor(all_trips$ride_length)
+# is.factor(all_trips$ride_length)
+# ^^Correction: is.factor() returns false and is.double() returns true
+
 all_trips$ride_length <- as.numeric(as.character(all_trips$ride_length))
 is.numeric(all_trips$ride_length)
+
+#A way to do this^ is in one-step is:
+#all_trips$ride_length <- as.numeric(difftime(all_trips$ended_at,all_trips$started_at))
 
 
 # Remove "bad" data
@@ -208,11 +213,11 @@ aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$d
 
 # analyze ridership data by type and weekday
 all_trips_v2 %>% 
-  mutate(weekday = wday(started_at, label = TRUE)) %>%  #creates weekday field using wday()
-  group_by(member_casual, weekday) %>%  #groups by usertype and weekday
-  summarise(number_of_rides = n()                                                        #calculates the number of rides and average duration 
-  ,average_duration = mean(ride_length)) %>%                 # calculates the average duration
-  arrange(member_casual, weekday)                                                                # sorts
+  mutate(weekday = wday(started_at, label = TRUE)) %>%        # creates weekday field using wday()
+  group_by(member_casual, weekday) %>%                        # groups by usertype and weekday
+  summarise(number_of_rides = n()                             # calculates the number of rides and average duration 
+  ,average_duration = mean(ride_length)) %>%                  # calculates the average duration
+  arrange(member_casual, weekday)                             # sorts
 
 
 # Let's visualize the number of rides by rider type
@@ -243,7 +248,4 @@ all_trips_v2 %>%
 # Create a csv file that we will visualize in Excel, Tableau, or my presentation software
 # N.B.: This file location is for a Mac. If you are working on a PC, change the file location accordingly (most likely "C:\Users\YOUR_USERNAME\Desktop\...") to export the data. You can read more here: https://datatofish.com/export-dataframe-to-csv-in-r/
 counts <- aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
-write.csv(counts, file = '~/Desktop/Divvy_Exercise/avg_ride_length.csv')
-
-
-#You're done! Congratulations!
+write.csv(counts, file = '~/Workspace/avg_ride_length.csv')
