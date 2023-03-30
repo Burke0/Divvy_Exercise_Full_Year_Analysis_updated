@@ -151,9 +151,9 @@ all_trips$year <- format(as.Date(all_trips$date), "%Y")
 all_trips$day_of_week <- format(as.Date(all_trips$date), "%A")
 
 
-# Add a "ride_length" calculation to all_trips (in seconds)
+# Add a "ride_length" calculation to all_trips (in minutes)
 # https://stat.ethz.ch/R-manual/R-devel/library/base/html/difftime.html
-all_trips$ride_length <- difftime(all_trips$ended_at,all_trips$started_at)
+all_trips$ride_length <- difftime(all_trips$ended_at,all_trips$started_at, units="mins" )
 
 
 # Inspect the structure of the columns
@@ -181,7 +181,7 @@ all_trips_v2 <- all_trips[!(all_trips$start_station_name == "HQ QR" | all_trips$
 #=====================================
 # STEP 4: CONDUCT DESCRIPTIVE ANALYSIS
 #=====================================
-# Descriptive analysis on ride_length (all figures in seconds)
+# Descriptive analysis on ride_length (all figures in minutes)
 mean(all_trips_v2$ride_length) #straight average (total ride length / rides)
 median(all_trips_v2$ride_length) #midpoint number in the ascending array of ride lengths
 max(all_trips_v2$ride_length) #longest ride
@@ -239,13 +239,8 @@ all_trips_v2 %>%
             ,average_duration = mean(ride_length)) %>% 
   arrange(member_casual, weekday)  %>% 
   ggplot(aes(x = weekday, y = average_duration, fill = member_casual)) +
-  geom_col(position = "dodge")
+  geom_col(position = "dodge") +
+  labs(y="average_duration(min)")
 
-
-#=================================================
-# STEP 5: EXPORT SUMMARY FILE FOR FURTHER ANALYSIS
-#=================================================
-# Create a csv file that we will visualize in Excel, Tableau, or my presentation software
-# N.B.: This file location is for a Mac. If you are working on a PC, change the file location accordingly (most likely "C:\Users\YOUR_USERNAME\Desktop\...") to export the data. You can read more here: https://datatofish.com/export-dataframe-to-csv-in-r/
-counts <- aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
-write.csv(counts, file = '~/Workspace/avg_ride_length.csv')
+#counts <- aggregate(all_trips_v2$ride_length ~ all_trips_v2$member_casual + all_trips_v2$day_of_week, FUN = mean)
+#write.csv(counts, file = '~/Workspace/avg_ride_length.csv')
