@@ -12,3 +12,4 @@ Here are my suggestions for converting casual riders to members
     A rollover minutes system for casual riders to sway them into more frequent trips. Meanwhile, heavily incentivize membership with frequent rider rewards and discounts.
 
 Furthermore, survey data could be beneficial as supplemental data to gain better insights on the differences found, and to test the waters with these proposed programs.
+![image](https://user-images.githubusercontent.com/107438768/232860193-bc0b48e1-b9ff-486c-a242-f21a2f82bf6b.png)
